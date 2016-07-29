@@ -1,3 +1,3 @@
-An actor based workflows manager
+An actor based REST api workflows manager
 
 
