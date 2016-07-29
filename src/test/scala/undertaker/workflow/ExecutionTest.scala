@@ -53,7 +53,7 @@ class ExecutionTest extends TestKit(ActorSystem("testSystem"))
       }
     }
 
-    "suicide after the specified suicide timeout and finished" in {
+    "terminate after it finishes running" in {
       val probe = TestProbe()
       probe.watch(execution)
       execution ! Run
