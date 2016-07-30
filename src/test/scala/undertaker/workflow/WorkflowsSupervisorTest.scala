@@ -18,14 +18,30 @@ class WorkflowsSupervisorTest extends TestKit(ActorSystem("testSystem"))
     override def write(workflow: Workflow): Future[Workflow] = Future.successful(workflow)
   }
 
-  "An execution supervisor " should {
-    val supervisor = TestActorRef(new WorkflowsSupervisor(noopWorkflowsWriter))
+  "A workflow supervisor " should {
 
-    "create execution actors" in {
+    "persist a valid workflow" in {
+      val supervisor = TestActorRef(new WorkflowsSupervisor(noopWorkflowsWriter))
       supervisor ! New(WorkflowRequest(10))
       fishForMessage(max = 100.milliseconds){
         case Workflow("workflow0", 10) => true
         case _ => false
+      }
+    }
+
+    "persist multiple serial workflows" in {
+      val supervisor = TestActorRef(new WorkflowsSupervisor(noopWorkflowsWriter))
+      within(100.milliseconds){
+        supervisor ! New(WorkflowRequest(10))
+        fishForMessage(){
+          case Workflow("workflow0", 10) => true
+          case _ => false
+        }
+        supervisor ! New(WorkflowRequest(7))
+        fishForMessage(){
+          case Workflow("workflow1", 7) => true
+          case _ => false
+        }
       }
     }
   }
