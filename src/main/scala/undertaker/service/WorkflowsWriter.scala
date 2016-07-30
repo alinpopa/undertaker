@@ -4,5 +4,5 @@ import undertaker.Workflow
 import scala.concurrent.Future
 
 trait WorkflowsWriter {
-  def write(workflow: Workflow): Future[Workflow]
+  def write(workflow: Workflow): Workflow
 }

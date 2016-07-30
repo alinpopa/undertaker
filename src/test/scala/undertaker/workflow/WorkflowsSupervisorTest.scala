@@ -4,9 +4,7 @@ import akka.actor.ActorSystem
 import akka.testkit.{ImplicitSender, TestActorRef, TestKit}
 import org.scalatest.{WordSpecLike, _}
 import undertaker.service.WorkflowsWriter
-import undertaker.{ExecutionInfo, New, Workflow, WorkflowRequest}
-
-import scala.concurrent.Future
+import undertaker.{New, Workflow, WorkflowRequest}
 import scala.concurrent.duration._
 
 class WorkflowsSupervisorTest extends TestKit(ActorSystem("testSystem"))
@@ -15,7 +13,7 @@ class WorkflowsSupervisorTest extends TestKit(ActorSystem("testSystem"))
   implicit val ec = system.dispatcher
 
   val noopWorkflowsWriter = new WorkflowsWriter {
-    override def write(workflow: Workflow): Future[Workflow] = Future.successful(workflow)
+    override def write(workflow: Workflow): Workflow = workflow
   }
 
   "A workflow supervisor " should {

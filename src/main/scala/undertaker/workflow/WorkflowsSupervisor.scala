@@ -12,9 +12,9 @@ class WorkflowsSupervisor(val workflowsWriter: WorkflowsWriter)(implicit ec: Exe
   private def ready(counter: Int): Receive = {
     case New(workflowRequest) => {
       val workflowId = s"workflow$counter"
-      val future = workflowsWriter.write(Workflow(workflowId, workflowRequest.steps))
+      val workflow = workflowsWriter.write(Workflow(workflowId, workflowRequest.steps))
       val requester = sender
-      future pipeTo requester
+      requester ! workflow
       context.become(ready(counter + 1))
     }
   }

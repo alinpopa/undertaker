@@ -2,7 +2,6 @@ package undertaker.service
 
 import undertaker.Workflow
 import scala.collection.mutable
-import scala.concurrent.Future
 
 /**
   * This is not thread-safe; it'll be used, for writing, only from within
@@ -13,9 +12,9 @@ class InMemoryWorkflows extends Workflows{
   private val store = new mutable.HashMap[String, Workflow]()
 
   override def writer: WorkflowsWriter = new WorkflowsWriter {
-    override def write(workflow: Workflow): Future[Workflow] = {
+    override def write(workflow: Workflow): Workflow = {
       store.put(workflow.workflowId, workflow)
-      Future.successful(workflow)
+      workflow
     }
   }
 

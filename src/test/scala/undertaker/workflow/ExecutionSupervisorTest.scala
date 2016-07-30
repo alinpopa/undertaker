@@ -1,9 +1,11 @@
 package undertaker.workflow
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, ActorSystem}
 import akka.testkit.{ImplicitSender, TestActorRef, TestKit}
 import org.scalatest._
+import undertaker.service.RegistryWriter
 import undertaker.{ExecutionInfo, Workflow}
+
 import scala.concurrent.duration._
 
 class ExecutionSupervisorTest extends TestKit(ActorSystem("testSystem"))
@@ -15,7 +17,11 @@ class ExecutionSupervisorTest extends TestKit(ActorSystem("testSystem"))
     val supervisor = TestActorRef[ExecutionSupervisor]
 
     "create execution actors" in {
-      supervisor ! Execution.props(Workflow("test-workflow", 7), 5.minutes)
+      val registryWriter = new RegistryWriter[String, ActorRef] {
+        override def register(key: String, value: ActorRef): ActorRef = value
+        override def unregister(key: String): Option[ActorRef] = None
+      }
+      supervisor ! Execution.props(Workflow("test-workflow", 7), registryWriter, 5.minutes)
       fishForMessage(max = 100.milliseconds){
         case ExecutionInfo(executionId, 0, false) => true
         case _ => false

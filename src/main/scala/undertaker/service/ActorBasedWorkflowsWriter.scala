@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 class ActorBasedWorkflowsWriter(val supervisor: ActorRef)(implicit ec: ExecutionContext) extends WorkflowRequestWriter{
 
   override def write(workflowRequest: WorkflowRequest): Future[Workflow] = {
-    implicit val timeout = Timeout(100.milliseconds)
+    implicit val timeout = Timeout(500.milliseconds)
     (supervisor ? New(workflowRequest)).map {
       case w:Workflow => w
     }

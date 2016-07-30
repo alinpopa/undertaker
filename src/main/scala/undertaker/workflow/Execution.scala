@@ -1,13 +1,24 @@
 package undertaker.workflow
 
-import akka.actor.{Actor, Props}
+import akka.actor.{Actor, ActorRef, Props}
 import undertaker._
+import undertaker.service.RegistryWriter
+
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
 class Execution(val workflow: Workflow,
+                val registryWriter: RegistryWriter[String, ActorRef],
                 val aliveAfterFinished: FiniteDuration = 5.minutes)(implicit ec: ExecutionContext) extends Actor{
   private val scheduler = context.system.scheduler
+
+  override def preStart(): Unit = {
+    registryWriter.register(self.path.name, self)
+  }
+
+  override def postStop(): Unit = {
+    registryWriter.unregister(self.path.name)
+  }
 
   override def receive =
     if (workflow.steps > 0)
@@ -40,7 +51,9 @@ class Execution(val workflow: Workflow,
 }
 
 object Execution {
-  def props(workflow: Workflow, aliveAfterFinished: FiniteDuration)(implicit ec: ExecutionContext): Props =
-    Props(new Execution(workflow, aliveAfterFinished))
+  def props(workflow: Workflow,
+            registryWriter: RegistryWriter[String, ActorRef],
+            aliveAfterFinished: FiniteDuration)(implicit ec: ExecutionContext): Props =
+    Props(new Execution(workflow, registryWriter, aliveAfterFinished))
 }
 
