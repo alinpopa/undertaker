@@ -11,6 +11,7 @@ import scala.concurrent.duration._
 class ExecutionTest extends TestKit(ActorSystem("testSystem"))
   with ImplicitSender with WordSpecLike with ShouldMatchers {
   implicit val timeout = Timeout(100.milliseconds)
+  implicit val ec = system.dispatcher
 
   "An execution actor" should {
     val execution = TestActorRef(new Execution(Workflow("test-workflow", 3), 10.milliseconds))

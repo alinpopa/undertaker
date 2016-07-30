@@ -2,11 +2,11 @@ package undertaker.workflow
 
 import akka.actor.{Actor, Props}
 import undertaker._
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
 class Execution(val workflow: Workflow,
-                val aliveAfterFinished: FiniteDuration = 5.minutes) extends Actor{
-  import context.dispatcher
+                val aliveAfterFinished: FiniteDuration = 5.minutes)(implicit ec: ExecutionContext) extends Actor{
   private val scheduler = context.system.scheduler
 
   override def receive =
@@ -40,7 +40,7 @@ class Execution(val workflow: Workflow,
 }
 
 object Execution {
-  def props(workflow: Workflow, aliveAfterFinished: FiniteDuration): Props =
+  def props(workflow: Workflow, aliveAfterFinished: FiniteDuration)(implicit ec: ExecutionContext): Props =
     Props(new Execution(workflow, aliveAfterFinished))
 }
 
