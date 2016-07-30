@@ -19,6 +19,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-http-core" % akkaVersion,
     "com.typesafe.akka" %% "akka-http-experimental" % akkaVersion,
     "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaVersion,
+    "com.github.kxbmap" %% "configs" % "0.4.2",
     "org.scalatest" %% "scalatest" % "2.2.6" % "test",
     "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test",
     "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % "test"
