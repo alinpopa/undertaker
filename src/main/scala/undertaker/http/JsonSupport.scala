@@ -2,7 +2,7 @@ package undertaker.http
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import spray.json.{DefaultJsonProtocol, DeserializationException, JsNumber, JsObject, JsString, JsValue, RootJsonFormat}
-import undertaker.{FinishedInfo, WorkflowExecutionId, WorkflowRequest, WorkflowResponse}
+import undertaker.data.Models._
 
 trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val finishedFormat = jsonFormat1(FinishedInfo)

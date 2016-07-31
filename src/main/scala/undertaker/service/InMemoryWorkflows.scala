@@ -1,6 +1,7 @@
 package undertaker.service
 
-import undertaker.Workflow
+import undertaker.data.Models.Workflow
+
 import scala.collection.mutable
 
 /**

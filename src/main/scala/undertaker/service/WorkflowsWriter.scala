@@ -1,7 +1,6 @@
 package undertaker.service
 
-import undertaker.Workflow
-import scala.concurrent.Future
+import undertaker.data.Models.Workflow
 
 trait WorkflowsWriter {
   def write(workflow: Workflow): Workflow

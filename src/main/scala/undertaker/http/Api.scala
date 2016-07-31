@@ -1,9 +1,9 @@
 package undertaker.http
 
 import undertaker.service._
-import undertaker._
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives
+import undertaker.data.Models._
 import scala.concurrent.ExecutionContext
 
 class Api(val workflowsReader: WorkflowReader,
@@ -20,7 +20,13 @@ class Api(val workflowsReader: WorkflowReader,
     pathEndOrSingleSlash {
       post {
         entity(as[WorkflowRequest]) { w =>
-          complete(workflowRequestWriter.write(w).map(workflow => Created -> WorkflowResponse(workflow.workflowId)))
+          complete(workflowRequestWriter.write(w).map { workflowOpt =>
+            workflowOpt.map { workflow =>
+              Created -> Some(WorkflowResponse(workflow.workflowId))
+            } getOrElse {
+              BadRequest -> None
+            }
+          })
         }
       }
     }
@@ -29,7 +35,13 @@ class Api(val workflowsReader: WorkflowReader,
     path(Segment / "executions") { workflowId =>
       post {
         workflowsReader.read(workflowId).map { workflow =>
-          complete(executions.create(workflow).map(info => Created -> WorkflowExecutionId(info.executionId)))
+          complete(executions.create(workflow).map { infoOpt =>
+            infoOpt.map { info =>
+              Created -> Some(WorkflowExecutionId(info.executionId))
+            } getOrElse {
+              BadRequest -> None
+            }
+          })
         } getOrElse {
           complete(NotFound -> None)
         }

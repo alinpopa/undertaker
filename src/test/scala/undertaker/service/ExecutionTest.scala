@@ -1,13 +1,12 @@
-package undertaker.workflow
+package undertaker.service
 
 import akka.actor.{ActorRef, ActorSystem}
 import akka.testkit.{ImplicitSender, TestActorRef, TestKit, TestProbe}
 import akka.util.Timeout
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
-import undertaker._
-import undertaker.service.RegistryWriter
-
+import undertaker.data.Messages._
+import undertaker.data.Models._
 import scala.concurrent.duration._
 
 class ExecutionTest extends TestKit(ActorSystem("testSystem"))
@@ -23,39 +22,39 @@ class ExecutionTest extends TestKit(ActorSystem("testSystem"))
     val execution = TestActorRef(new Execution(Workflow("test-workflow", 3), registryWriter, 10.milliseconds))
 
     "have 0 as the initial state" in {
-      execution ! GetState
+      execution ! ExecutionAction.GetState
       fishForMessage(){
-        case Running(0) => true
+        case ExecutionState.Running(0) => true
         case _ => false
       }
     }
 
     "increment state by one with each run" in {
-      execution ! Run
-      execution ! GetState
+      execution ! ExecutionAction.Run
+      execution ! ExecutionAction.GetState
       fishForMessage(){
-        case Running(1) => true
+        case ExecutionState.Running(1) => true
         case _ => false
       }
     }
 
     "increment state by two when two Run messages are sent" in {
-      execution ! Run
-      execution ! Run
-      execution ! GetState
+      execution ! ExecutionAction.Run
+      execution ! ExecutionAction.Run
+      execution ! ExecutionAction.GetState
       fishForMessage(){
-        case Running(2) => true
+        case ExecutionState.Running(2) => true
         case _ => false
       }
     }
 
     "get into finished state when steps are finished" in {
-      execution ! Run
-      execution ! Run
-      execution ! Run
-      execution ! GetState
+      execution ! ExecutionAction.Run
+      execution ! ExecutionAction.Run
+      execution ! ExecutionAction.Run
+      execution ! ExecutionAction.GetState
       fishForMessage(){
-        case Finished(2) => true
+        case ExecutionState.Finished(2) => true
         case _ => false
       }
     }
@@ -63,9 +62,9 @@ class ExecutionTest extends TestKit(ActorSystem("testSystem"))
     "terminate after it finishes running" in {
       val probe = TestProbe()
       probe.watch(execution)
-      execution ! Run
-      execution ! Run
-      execution ! Run
+      execution ! ExecutionAction.Run
+      execution ! ExecutionAction.Run
+      execution ! ExecutionAction.Run
       probe.expectTerminated(execution)
     }
 
@@ -80,9 +79,9 @@ class ExecutionTest extends TestKit(ActorSystem("testSystem"))
       val execution = TestActorRef(new Execution(Workflow("test-workflow", 3), registryWriter, 10.milliseconds))
       val probe = TestProbe()
       probe.watch(execution)
-      execution ! Run
-      execution ! Run
-      execution ! Run
+      execution ! ExecutionAction.Run
+      execution ! ExecutionAction.Run
+      execution ! ExecutionAction.Run
       within(100.milliseconds) {
         probe.expectTerminated(execution)
       }

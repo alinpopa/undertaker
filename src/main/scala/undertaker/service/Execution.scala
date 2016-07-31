@@ -1,9 +1,8 @@
-package undertaker.workflow
+package undertaker.service
 
 import akka.actor.{Actor, ActorRef, Props}
-import undertaker._
-import undertaker.service.RegistryWriter
-
+import undertaker.data.Models._
+import undertaker.data.Messages._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
@@ -27,23 +26,23 @@ class Execution(val workflow: Workflow,
       finished(0)
 
   private def running(currentStep: Int): Receive = {
-    case Run =>
-      sender ! Running(currentStep)
+    case ExecutionAction.Run =>
+      sender ! ExecutionState.Running(currentStep)
       if (isNotFinished(currentStep)) {
         context.become(running(currentStep + 1))
       } else {
-        scheduler.scheduleOnce(delay = aliveAfterFinished, receiver = self, message = Suicide)
+        scheduler.scheduleOnce(delay = aliveAfterFinished, receiver = self, message = ExecutionAction.Suicide)
         context.become(finished(currentStep))
       }
     case _ =>
-      sender ! Running(currentStep)
+      sender ! ExecutionState.Running(currentStep)
   }
 
   private def finished(currentStep: Int): Receive = {
-    case Suicide =>
+    case ExecutionAction.Suicide =>
       context.stop(self)
     case _ =>
-      sender ! Finished(currentStep)
+      sender ! ExecutionState.Finished(currentStep)
   }
 
   private def isNotFinished(currentStep: Int) =
