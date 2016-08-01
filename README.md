@@ -4,8 +4,8 @@ An actor based REST api workflows manager
 
 ##### Prerequisites
 
-- JVM (> 1.8)
-- SBT (> 0.13.x)
+- [JVM](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) (>= 1.8)
+- [SBT](http://www.scala-sbt.org/download.html) (>= 0.13.x)
 
 ##### Config
 
