@@ -1,7 +1,7 @@
 lazy val commonSettings = Seq(
   organization := "undertaker",
   version := "1.0.0",
-  scalaVersion := "2.11.8",
+  scalaVersion := "2.12.4",
   scalacOptions := Seq("-unchecked", "-deprecation", "-feature")
 )
 
@@ -14,14 +14,14 @@ lazy val root = (project in file(".")).
   )
 
 libraryDependencies ++= {
-  val akkaVersion = "2.4.8"
   Seq(
-    "com.typesafe.akka" %% "akka-http-core" % akkaVersion,
-    "com.typesafe.akka" %% "akka-http-experimental" % akkaVersion,
-    "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaVersion,
-    "com.github.kxbmap" %% "configs" % "0.4.2",
-    "org.scalatest" %% "scalatest" % "2.2.6" % "test",
-    "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test",
-    "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % "test"
+    "com.typesafe.akka" %% "akka-actor" % "2.5.14",
+    "com.typesafe.akka" %% "akka-stream" % "2.5.14",
+    "com.typesafe.akka" %% "akka-http" % "10.1.3",
+    "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.3",
+    "com.github.kxbmap" %% "configs" % "0.4.4",
+    "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+    "com.typesafe.akka" %% "akka-testkit" % "2.5.14" % "test",
+    "org.scalamock" %% "scalamock" % "4.1.0" % "test"
   )
 }

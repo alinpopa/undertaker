@@ -10,7 +10,7 @@ import undertaker.data.Models._
 import scala.concurrent.duration._
 
 class ExecutionTest extends TestKit(ActorSystem("testSystem"))
-  with ImplicitSender with WordSpecLike with ShouldMatchers with MockFactory {
+  with ImplicitSender with WordSpecLike with Matchers with MockFactory {
   implicit val timeout = Timeout(100.milliseconds)
   implicit val ec = system.dispatcher
 

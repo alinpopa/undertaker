@@ -8,7 +8,7 @@ import undertaker.data.Messages._
 import scala.concurrent.duration._
 
 class WorkflowsSupervisorTest extends TestKit(ActorSystem("testSystem"))
-  with ImplicitSender with WordSpecLike with ShouldMatchers {
+  with ImplicitSender with WordSpecLike with Matchers {
 
   implicit val ec = system.dispatcher
 

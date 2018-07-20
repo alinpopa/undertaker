@@ -4,7 +4,7 @@ import akka.actor.{Actor, ActorSystem}
 import akka.testkit.TestActorRef
 import org.scalatest.{WordSpecLike, _}
 
-class ActorsRegistryTest extends WordSpecLike with ShouldMatchers {
+class ActorsRegistryTest extends WordSpecLike with Matchers {
   implicit val system = ActorSystem("testSystem")
 
   "An actors registry" should {

@@ -3,7 +3,7 @@ package undertaker.service
 import org.scalatest._
 import undertaker.data.Models._
 
-class InMemoryWorkflowsTest extends WordSpecLike with ShouldMatchers{
+class InMemoryWorkflowsTest extends WordSpecLike with Matchers{
   "An in memory workflow manager" should {
     val workflows = new InMemoryWorkflows
 
